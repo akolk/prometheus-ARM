@@ -3,3 +3,4 @@
 ---
 > FROM arm32v6/alpine:latest
 > ADD qemu-arm-static /usr/bin
+> RUN apk --no-cache add ca-certificates
