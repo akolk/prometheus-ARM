@@ -1,4 +1,4 @@
-1c1,2
+1c1,3
 < FROM        prom/busybox:latest
 ---
 > FROM arm64v8/alpine:latest
