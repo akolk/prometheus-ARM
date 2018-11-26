@@ -1,4 +1,4 @@
-1c1,2
+1c1,3
 < FROM        quay.io/prometheus/busybox:latest
 ---
 > FROM arm32v6/alpine:latest
