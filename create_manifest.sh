@@ -9,5 +9,5 @@ mv manifest-tool-linux-amd64 manifest-tool
 chmod +x manifest-tool
 ./manifest-tool --version
 echo "Pushing manifest ${REGISTRY}/${IMAGE}:latest"
-./manifest-tool push from-args --platforms linux/arm,linux/arm64 --template "${REGISTRY}/${IMAGE}:${VERSION}-ARCH" --target "${REGISTRY}/${IMAGE}:latest"
-./manifest-tool push from-args --platforms linux/arm,linux/arm64 --template "${REGISTRY}/${IMAGE}:${VERSION}-ARCH" --target "${REGISTRY}/${IMAGE}:${VERSION}"
+./manifest-tool push from-args --platforms linux/arm,linux/arm64,linux/amd64 --template "${REGISTRY}/${IMAGE}:${VERSION}-ARCH" --target "${REGISTRY}/${IMAGE}:latest"
+./manifest-tool push from-args --platforms linux/arm,linux/arm64,linux/amd64 --template "${REGISTRY}/${IMAGE}:${VERSION}-ARCH" --target "${REGISTRY}/${IMAGE}:${VERSION}"

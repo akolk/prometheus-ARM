@@ -19,6 +19,12 @@ env:
     - IMAGE=blackbox_exporter TAG=arm64 QEMU_ARCH=aarch64 ARCH=arm64
     - IMAGE=snmp_exporter TAG=arm64 QEMU_ARCH=aarch64 ARCH=arm64
     - IMAGE=pushgateway TAG=arm64 QEMU_ARCH=aarch64 ARCH=arm64
+    - IMAGE=prometheus TAG=arm64 QEMU_ARCH=aarch64 ARCH=amd64
+    - IMAGE=node_exporter TAG=arm64 QEMU_ARCH=aarch64 ARCH=amd64
+    - IMAGE=alertmanager TAG=arm64 QEMU_ARCH=aarch64 ARCH=amd64
+    - IMAGE=blackbox_exporter TAG=arm64 QEMU_ARCH=aarch64 ARCH=amd64
+    - IMAGE=snmp_exporter TAG=arm64 QEMU_ARCH=aarch64 ARCH=amd64
+    - IMAGE=pushgateway TAG=arm64 QEMU_ARCH=aarch64 ARCH=amd64
 #    - IMAGE=pushgateway TAG=arm QEMU_ARCH=arm ARCH=armv7 FORCE_VERSION=0.4.0
 #    - IMAGE=pushgateway TAG=arm64 QEMU_ARCH=aarch64 ARCH=arm64 FORCE_VERSION=0.4.0
 
@@ -28,7 +34,6 @@ install:
 script:
 # Download
   - git clone https://github.com/prometheus/${IMAGE}
-  - curl -L -o qemu-${QEMU_ARCH}-static.tar.gz https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VERSION}/qemu-${QEMU_ARCH}-static.tar.gz && tar zx -f qemu-${QEMU_ARCH}-static.tar.gz -C ${IMAGE}
   - 'DOWNLOAD_URL=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/prometheus/${IMAGE}/releases/latest | grep "browser_download_url" | grep "linux-${ARCH}" | cut -d\" -f4)'
   - if [[ -n ${FORCE_VERSION+set} ]]; then
       VERSION=$FORCE_VERSION ;
@@ -41,11 +46,14 @@ script:
   - git checkout ${VERSION}
   - popd
   - curl -L -o ${IMAGE}.tar.gz ${DOWNLOAD_URL} && tar zx -f ${IMAGE}.tar.gz --strip-components=1 -C ${IMAGE}
-# Build
   - if [ "$IMAGE" == "snmp_exporter" ]; then
       cp -rf snmp.yml ${IMAGE}/snmp.yml ;
     fi
-  - patch ${IMAGE}/Dockerfile Dockerfile.${IMAGE}-${TAG}.patch
+# Build (do not patch and download qemu for amd64 images)
+  - if [ "$ARCH" != "amd64" ]; then
+      curl -L -o qemu-${QEMU_ARCH}-static.tar.gz https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VERSION}/qemu-${QEMU_ARCH}-static.tar.gz && tar zx -f qemu-${QEMU_ARCH}-static.tar.gz -C ${IMAGE}
+      patch ${IMAGE}/Dockerfile Dockerfile.${IMAGE}-${TAG}.patch
+    fi
   - docker build -t ${REGISTRY}/${IMAGE}:${VERSION}-${TAG} ${IMAGE}
 # Check
   - docker images
