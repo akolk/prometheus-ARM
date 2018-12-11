@@ -51,8 +51,8 @@ script:
     fi
 # Build (do not patch and download qemu for amd64 images)
   - if [ "$ARCH" != "amd64" ]; then
-      curl -L -o qemu-${QEMU_ARCH}-static.tar.gz https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VERSION}/qemu-${QEMU_ARCH}-static.tar.gz && tar zx -f qemu-${QEMU_ARCH}-static.tar.gz -C ${IMAGE}
-      patch ${IMAGE}/Dockerfile Dockerfile.${IMAGE}-${TAG}.patch
+    curl -L -o qemu-${QEMU_ARCH}-static.tar.gz https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VERSION}/qemu-${QEMU_ARCH}-static.tar.gz && tar zx -f qemu-${QEMU_ARCH}-static.tar.gz -C ${IMAGE};
+    patch ${IMAGE}/Dockerfile Dockerfile.${IMAGE}-${TAG}.patch;
     fi
   - docker build -t ${REGISTRY}/${IMAGE}:${VERSION}-${TAG} ${IMAGE}
 # Check
