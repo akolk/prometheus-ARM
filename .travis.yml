@@ -4,7 +4,7 @@ sudo: required
 
 env:
   global:
-    - REGISTRY=carlosedp
+    - REGISTRY=akolk
     - QEMU_VERSION=v2.11.0
   matrix:
     - IMAGE=prometheus TAG=arm QEMU_ARCH=arm ARCH=armv7
